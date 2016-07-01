@@ -1,0 +1,1 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/d7hw4or28dn3bjr8?svg=true)](https://ci.appveyor.com/project/sayedihashimi/xcompile-samples)
