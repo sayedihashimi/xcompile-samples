@@ -27,9 +27,8 @@ foreach($r in $repos){
     $repoDir = (CloneRepo -url $r)
     [System.IO.DirectoryInfo]$dirInfo = $repoDir
     
-
-    $projname = ([uri]$r).Segments[([uri]$r).Segments.Count -1]
-    $foo.Segments[$foo.Segments.Count -1]
+    [System.Uri]$ruri = $r
+    $projname = $ruri.Segments[$ruri.Segments.Count -1]
     $reportPath = (Join-Path $tempDir ('{0}.txt' -f $projname))
     Get-Ifdef -path $repoDir | Out-File $reportPath
     Push-AppveyorArtifact $reportPath
