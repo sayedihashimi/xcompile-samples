@@ -1,9 +1,19 @@
 
 [string[]]$repos = 'https://github.com/StackExchange/dapper-dot-net',
                     'https://github.com/xunit/xunit',
+                    'https://github.com/nunit/nunit',
+                    'https://github.com/moq/moq4',
+                    'https://github.com/antlr/antlrcs',
+                    'https://github.com/NLog/NLog/',
                     'https://github.com/MvvmCross/MvvmCross',
                     'https://github.com/JamesNK/Newtonsoft.Json',
-                    'https://github.com/aspnet/entityframework'
+                    'https://github.com/aspnet/entityframework',
+                    'https://github.com/aspnet/Routing',
+                    'https://github.com/aspnet/Microsoft.Data.Sqlite',
+                    'https://github.com/aspnet/Razor',
+                    'https://github.com/aspnet/Caching',
+                    'https://github.com/aspnet/Common',
+                    'https://github.com/Azure/azure-storage-net'
 
 function Get-ScriptDirectory
 {
