@@ -1,9 +1,9 @@
 
-[string[]]$repos = 'https://github.com/StackExchange/dapper-dot-net'<#,
+[string[]]$repos = 'https://github.com/StackExchange/dapper-dot-net',
                     'https://github.com/xunit/xunit',
                     'https://github.com/MvvmCross/MvvmCross',
                     'https://github.com/JamesNK/Newtonsoft.Json',
-                    'https://github.com/aspnet/entityframework'#>
+                    'https://github.com/aspnet/entityframework'
 
 function Get-ScriptDirectory
 {
