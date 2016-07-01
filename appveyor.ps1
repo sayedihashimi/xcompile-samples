@@ -26,7 +26,7 @@ $tempDir = (Join-Path ([System.IO.Path]::GetTempPath()) ('xcompile\{0}' -f ([dat
 New-Item -Path $tempDir -ItemType Directory
 foreach($r in $repos){
     $repoDir = (CloneRepo -url $r)
-    [System.IO.DirectoryInfo]$dirInfo = $r
+    [System.IO.DirectoryInfo]$dirInfo = $repoDir
     
     $reportPath = (Join-Path $tempDir ('{0}.txt' -f $dirInfo.Name))
     Get-Ifdef -path $repoDir | Out-File $reportPath
