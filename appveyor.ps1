@@ -38,7 +38,7 @@ if(Test-Path -Path $zipfile){
     Remove-Item $zipfile
 }
 
-New-ZipFile -ZipFilePath $zipfile -rootFolder $tempDir -InputObject ((Get-ChildItem -Path $tempDir *.txt -Recurse -Filter).FullName)
+New-ZipFile -ZipFilePath $zipfile -rootFolder $tempDir -InputObject ((Get-ChildItem -Path $tempDir *.txt -Recurse -File).FullName)
 Push-AppveyorArtifact $zipfile
 
 
