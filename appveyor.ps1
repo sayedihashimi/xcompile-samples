@@ -4,7 +4,6 @@
                     'https://github.com/nunit/nunit',
                     'https://github.com/moq/moq4',
                     'https://github.com/antlr/antlrcs',
-                    'https://github.com/NLog/NLog/',
                     'https://github.com/MvvmCross/MvvmCross',
                     'https://github.com/JamesNK/Newtonsoft.Json',
                     'https://github.com/aspnet/entityframework',
@@ -41,7 +40,10 @@ foreach($r in $repos){
     $projname = $ruri.Segments[$ruri.Segments.Count -1]
     $reportPath = (Join-Path $tempDir ('{0}.txt' -f $projname))
     Get-Ifdef -path $repoDir | Out-File $reportPath
-    Push-AppveyorArtifact $reportPath
+    
+    if(Test-Path $reportPath){
+        Push-AppveyorArtifact $reportPath
+    }
 }
 # create zip file
 $zipfile = (Join-Path $tempDir all.zip)
