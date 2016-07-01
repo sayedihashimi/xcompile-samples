@@ -21,14 +21,16 @@ if(-not (Test-Path $helperpath -PathType Leaf)){
 # inline the script
 . $helperpath
 
-#[string[]]$repoDirs = @()
 $tempDir = (Join-Path ([System.IO.Path]::GetTempPath()) ('xcompile\{0}' -f ([datetime]::Now.Ticks)))
 New-Item -Path $tempDir -ItemType Directory
 foreach($r in $repos){
     $repoDir = (CloneRepo -url $r)
     [System.IO.DirectoryInfo]$dirInfo = $repoDir
     
-    $reportPath = (Join-Path $tempDir ('{0}.txt' -f $dirInfo.Name))
+
+    $projname = ([uri]$r).Segments[([uri]$r).Segments.Count -1]
+    $foo.Segments[$foo.Segments.Count -1]
+    $reportPath = (Join-Path $tempDir ('{0}.txt' -f $projname))
     Get-Ifdef -path $repoDir | Out-File $reportPath
     Push-AppveyorArtifact $reportPath
 }
