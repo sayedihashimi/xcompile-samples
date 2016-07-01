@@ -12,7 +12,12 @@
                     'https://github.com/aspnet/Razor',
                     'https://github.com/aspnet/Caching',
                     'https://github.com/aspnet/Common',
-                    'https://github.com/Azure/azure-storage-net'
+                    'https://github.com/Azure/azure-storage-net',
+                    'https://github.com/Azure/azure-powershell',
+                    'https://github.com/Azure/azure-sdk-for-net',
+                    'https://github.com/Azure/azure-webjobs-sdk-script',
+                    'https://github.com/Azure/azure-webjobs-sdk',
+                    'https://github.com/Azure/azure-iot-remote-monitoring'
 
 function Get-ScriptDirectory
 {
@@ -33,6 +38,7 @@ if(-not (Test-Path $helperpath -PathType Leaf)){
 $tempDir = (Join-Path ([System.IO.Path]::GetTempPath()) ('xcompile\{0}' -f ([datetime]::Now.Ticks)))
 New-Item -Path $tempDir -ItemType Directory
 foreach($r in $repos){
+    "Processing [$r]" | Write-Host -ForegroundColor Cyan
     $repoDir = (CloneRepo -url $r)
     [System.IO.DirectoryInfo]$dirInfo = $repoDir
     
@@ -45,6 +51,7 @@ foreach($r in $repos){
         Push-AppveyorArtifact $reportPath
     }
 }
+'Creating zip file with all results' | Write-Host -ForegroundColor Cyan
 # create zip file
 $zipfile = (Join-Path $tempDir all.zip)
 if(Test-Path -Path $zipfile){
@@ -54,20 +61,4 @@ if(Test-Path -Path $zipfile){
 New-ZipFile -ZipFilePath $zipfile -rootFolder $tempDir -InputObject ((Get-ChildItem -Path $tempDir *.txt -Recurse -File).FullName)
 Push-AppveyorArtifact $zipfile
 
-
-<#
-
-$reportPath = (Join-Path ([System.IO.Path]::GetTempPath()) 'xcompile-report.txt')
-if(Test-Path $reportPath){
-    Remove-Item $reportPath
-}
-
-foreach($rd in $repoDirs){
-    $reportPath = (Join-Path
-    Get-Ifdef -path $rd
-}
-
-Get-Ifdef -path $repoDirs | Out-File $reportPath -Append
-
-Push-AppveyorArtifact $reportPath
-#>
+'Completed - see artifacts to download results' | Write-Host
