@@ -21,17 +21,40 @@ if(-not (Test-Path $helperpath -PathType Leaf)){
 # inline the script
 . $helperpath
 
-[string[]]$repoDirs = @()
-
+#[string[]]$repoDirs = @()
+$tempDir = (Join-Path ([System.IO.Path]::GetTempPath()) ('xcompile\{0}' -f ([datetime]::Now.Ticks)))
+New-Item -Path $tempDir -ItemType Directory
 foreach($r in $repos){
-    $repoDirs += (CloneRepo -url $r)
+    $repoDir = (CloneRepo -url $r)
+    [System.IO.DirectoryInfo]$dirInfo = $r
+    
+    $reportPath = (Join-Path $tempDir ('{0}.txt' -f $dirInfo.Name))
+    Get-Ifdef -path $repoDir | Out-File $reportPath
+    Push-AppveyorArtifact $reportPath
 }
+# create zip file
+$zipfile = (Join-Path $tempDir all.zip)
+if(Test-Path -Path $zipfile){
+    Remove-Item $zipfile
+}
+
+New-ZipFile -ZipFilePath $zipfile -rootFolder $tempDir -InputObject ((Get-ChildItem -Path $tempDir -Recurse -Filter).FullName)
+Push-AppveyorArtifact $zipfile
+
+
+<#
 
 $reportPath = (Join-Path ([System.IO.Path]::GetTempPath()) 'xcompile-report.txt')
 if(Test-Path $reportPath){
     Remove-Item $reportPath
 }
 
+foreach($rd in $repoDirs){
+    $reportPath = (Join-Path
+    Get-Ifdef -path $rd
+}
+
 Get-Ifdef -path $repoDirs | Out-File $reportPath -Append
 
 Push-AppveyorArtifact $reportPath
+#>
