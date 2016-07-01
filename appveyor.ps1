@@ -21,14 +21,15 @@ if(-not (Test-Path $helperpath -PathType Leaf)){
 # inline the script
 . $helperpath
 
-#[string[]]$repoDirs = @()
 $tempDir = (Join-Path ([System.IO.Path]::GetTempPath()) ('xcompile\{0}' -f ([datetime]::Now.Ticks)))
 New-Item -Path $tempDir -ItemType Directory
 foreach($r in $repos){
     $repoDir = (CloneRepo -url $r)
-    [System.IO.DirectoryInfo]$dirInfo = $r
+    [System.IO.DirectoryInfo]$dirInfo = $repoDir
     
-    $reportPath = (Join-Path $tempDir ('{0}.txt' -f $dirInfo.Name))
+    [System.Uri]$ruri = $r
+    $projname = $ruri.Segments[$ruri.Segments.Count -1]
+    $reportPath = (Join-Path $tempDir ('{0}.txt' -f $projname))
     Get-Ifdef -path $repoDir | Out-File $reportPath
     Push-AppveyorArtifact $reportPath
 }
@@ -38,7 +39,7 @@ if(Test-Path -Path $zipfile){
     Remove-Item $zipfile
 }
 
-New-ZipFile -ZipFilePath $zipfile -rootFolder $tempDir -InputObject ((Get-ChildItem -Path $tempDir -Recurse -Filter).FullName)
+New-ZipFile -ZipFilePath $zipfile -rootFolder $tempDir -InputObject ((Get-ChildItem -Path $tempDir *.txt -Recurse -File).FullName)
 Push-AppveyorArtifact $zipfile
 
 

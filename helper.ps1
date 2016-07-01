@@ -159,6 +159,51 @@ function CloneRepo{
     }
 }
 
+function InternalGet-RelativePath{
+    [cmdletbinding()]
+    param(
+        [Parameter(Position=0,Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$fromPath,
+
+        [Parameter(Position=0,Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$toPath
+    )
+    process{
+        $fromPathToUse = (Resolve-Path $fromPath).Path
+        if( (Get-Item $fromPathToUse) -is [System.IO.DirectoryInfo]){
+            $fromPathToUse += [System.IO.Path]::DirectorySeparatorChar
+        }
+
+        $toPathToUse = (Resolve-Path $toPath).Path
+        if( (Get-Item $toPathToUse) -is [System.IO.DirectoryInfo]){
+            $toPathToUse += [System.IO.Path]::DirectorySeparatorChar
+        }
+
+        [uri]$fromUri = New-Object -TypeName 'uri' -ArgumentList $fromPathToUse
+        [uri]$toUri = New-Object -TypeName 'uri' -ArgumentList $toPathToUse
+
+        [string]$relPath = $toPath
+        # if the Scheme doesn't match just return toPath
+        if($fromUri.Scheme -eq $toUri.Scheme){
+            [uri]$relUri = $fromUri.MakeRelativeUri($toUri)
+            $relPath = [Uri]::UnescapeDataString($relUri.ToString())
+
+            if([string]::Equals($toUri.Scheme, [Uri]::UriSchemeFile, [System.StringComparison]::OrdinalIgnoreCase)){
+                $relPath = $relPath.Replace([System.IO.Path]::AltDirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar)
+            }
+        }
+
+        if([string]::IsNullOrWhiteSpace($relPath)){
+            $relPath = ('.{0}' -f [System.IO.Path]::DirectorySeparatorChar)
+        }
+
+        # return the result here
+        $relPath
+    }
+}
+
 # Heavily modified from: http://ss64.com/ps/zip.html / http://ss64.com/ps/zip.txt
 Add-Type -As System.IO.Compression.FileSystem
 function New-ZipFile {
