@@ -68,7 +68,7 @@ function Get-Ifdef{
                 $originstr = (git remote -v|Select-String 'origin.*fetch'|Select-Object -First 1).tostring()
                 $repofrag = $originstr.tostring().tostring().substring($originstr.lastindexof(':')+1).Replace(' (fetch)','').replace('.git','').trim()
                 Get-ChildItem .\ *.cs -Recurse -File|select-string '#if' -SimpleMatch -Context $context|%{ 
-                    '{0}{1}/blob/{2}/{3}#L{4}' -f $baseurl,$repofrag,$branchName, ($_.RelativePath($pwd).replace('\','/')),$_.LineNumber
+                    '{0}/blob/{1}/{2}#L{3}' -f (Get-RepoUrl $pwd),$branchName, ($_.RelativePath($pwd).replace('\','/')),$_.LineNumber
                     "$_`r`n"
                 }
             }
