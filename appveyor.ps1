@@ -17,7 +17,8 @@
                     'https://github.com/Azure/azure-sdk-for-net',
                     'https://github.com/Azure/azure-webjobs-sdk-script',
                     'https://github.com/Azure/azure-webjobs-sdk',
-                    'https://github.com/Azure/azure-iot-remote-monitoring'
+                    'https://github.com/Azure/azure-iot-remote-monitoring',
+                    'https://github.com/dotnet/roslyn-project-system'
 
 function Get-ScriptDirectory
 {
